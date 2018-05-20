@@ -9,13 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.github.victorhugonf.boletoapi.ejb.utils.CONSTANTES;
@@ -60,6 +60,10 @@ public class Boleto implements EntityIdentifiable{
 	@Column(nullable = false)
 	@NotEmpty(message = "Status deve ser informado.")
 	private String status;
+	
+	@Transient
+	@JsonProperty(FINE)
+	private BigDecimal multa;
 
 	@Override
 	public UUID getId() {
@@ -103,8 +107,12 @@ public class Boleto implements EntityIdentifiable{
 		this.status = status == null ? null : status.getStatus();
 	}
 	
-	@JsonGetter(FINE)
-	public BigDecimal getMulta(){
-		return null;
+	public BigDecimal getMulta() {
+		return multa;
 	}
+	
+	public void setMulta(BigDecimal multa) {
+		this.multa = multa;
+	}
+
 }
