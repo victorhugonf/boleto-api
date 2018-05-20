@@ -22,6 +22,7 @@
     	<!-- <resteasy-validator-version>3.5.1.Final</resteasy-validator-version> -->
     	<commons-lang3-version>3.7</commons-lang3-version>
     	<jackson-version>2.9.5</jackson-version>
+    	
     	<junit-version>4.12</junit-version>
     	<easymock-version>3.6</easymock-version>
 
