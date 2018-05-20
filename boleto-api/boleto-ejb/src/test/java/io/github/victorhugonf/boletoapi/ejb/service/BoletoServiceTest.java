@@ -84,7 +84,7 @@ public class BoletoServiceTest extends EasyMockSupport{
 //		
 //		return boleto;
 //	}
-//
+
 //	private BigDecimal calcularMulta(Boleto boleto) {
 //		Instant hoje = Instant.now().truncatedTo(ChronoUnit.DAYS);
 //		Instant vencimento = boleto.getDataVencimento().toInstant();
