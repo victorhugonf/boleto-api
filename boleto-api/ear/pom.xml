@@ -6,12 +6,12 @@
     <version>${project-version}</version>
   </parent>
 
-  <artifactId>boleto-ear</artifactId>
+  <artifactId>ear</artifactId>
   <packaging>ear</packaging>
   <version>${module-version}</version>
 
   <build>
-  	<finalName>exemplo-boleto-ear</finalName>
+  	<finalName>boleto-ear</finalName>
   	<plugins>
   		<plugin>
   			<groupId>org.apache.maven.plugins</groupId>
@@ -27,11 +27,11 @@
 
   				<ejbModule>
   					<groupId>io.github.victorhugonf.boletoapi</groupId>
-    				<artifactId>boleto-ejb</artifactId>
+    				<artifactId>ejb</artifactId>
   				</ejbModule>
   				<webModule>
   					<groupId>io.github.victorhugonf.boletoapi</groupId>
-    				<artifactId>boleto-rest-api</artifactId>
+    				<artifactId>rest</artifactId>
   				</webModule>
   			</configuration>
   		</plugin>
@@ -41,13 +41,13 @@
   <dependencies>
   	<dependency>
   		<groupId>io.github.victorhugonf.boletoapi</groupId>
-    	<artifactId>boleto-ejb</artifactId>
+    	<artifactId>ejb</artifactId>
     	<type>ejb</type>
     	<version>${module-version}</version>
   	</dependency>
   	<dependency>
   		<groupId>io.github.victorhugonf.boletoapi</groupId>
-    	<artifactId>boleto-rest-api</artifactId>
+    	<artifactId>rest</artifactId>
     	<type>war</type>
     	<version>${module-version}</version>
   	</dependency>

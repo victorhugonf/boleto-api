@@ -40,9 +40,9 @@
   <version>${project-version}</version>
 
   <modules>
-  	<module>boleto-ear</module>
-  	<module>boleto-ejb</module>
-  	<module>boleto-rest-api</module>
+  	<module>ear</module>
+  	<module>ejb</module>
+  	<module>rest</module>
   </modules>
 
   <dependencyManagement>

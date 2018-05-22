@@ -6,14 +6,14 @@
     <version>${project-version}</version>
   </parent>
 
-  <artifactId>boleto-rest-api</artifactId>
+  <artifactId>rest</artifactId>
   <packaging>war</packaging>
   <version>${module-version}</version>
 
   <dependencies>
   	<dependency>
   		<groupId>io.github.victorhugonf.boletoapi</groupId>
-  		<artifactId>boleto-ejb</artifactId>
+  		<artifactId>ejb</artifactId>
   		<version>${module-version}</version>
   		<scope>provided</scope>
   	</dependency>
