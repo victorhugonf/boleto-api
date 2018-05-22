@@ -1,14 +1,16 @@
-package io.github.victorhugonf.boletoapi.ejb.service;
+package io.github.victorhugonf.boletoapi.tools;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import org.easymock.EasyMockSupport;
-
 import io.github.victorhugonf.boletoapi.ejb.entity.Boleto;
 import io.github.victorhugonf.boletoapi.ejb.entity.StatusEnum;
 
-public class Factory extends EasyMockSupport{
+public class Factory {
+	
+	private Factory(){
+		
+	}
 	
 	public static Boleto boleto(){
 		return new Boleto();
