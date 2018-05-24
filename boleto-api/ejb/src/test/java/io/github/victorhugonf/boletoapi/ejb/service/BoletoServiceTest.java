@@ -4,18 +4,21 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.easymock.EasyMock;
+import org.easymock.EasyMockRule;
+import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 
 import io.github.victorhugonf.boletoapi.ejb.dao.BoletoDao;
 import io.github.victorhugonf.boletoapi.ejb.entity.Boleto;
 import io.github.victorhugonf.boletoapi.ejb.entity.StatusEnum;
-import io.github.victorhugonf.boletoapi.tools.Factory;
-import io.github.victorhugonf.boletoapi.tools.EasyMockSpportUtil;
+import io.github.victorhugonf.boletoapi.ejb.utils.Factory;
+import junit.framework.AssertionFailedError;
 
-public class BoletoServiceTest extends EasyMockSpportUtil{
+public class BoletoServiceTest extends EasyMockSupport{
 	
 	@TestSubject
 	private BoletoService boletoService = new BoletoService();
@@ -23,12 +26,19 @@ public class BoletoServiceTest extends EasyMockSpportUtil{
 	@Mock
 	private BoletoDao boletoDaoMock;
 	
+	@Rule
+	public EasyMockRule rule = new EasyMockRule(this);
+	
 	@Test
 	public void naoProcessarBoletoPago() throws Exception{
 		Boleto boleto = Factory.boleto();
 		boleto.setStatus(StatusEnum.PAID);
 		
+		EasyMock.expect(boletoDaoMock.merge(boleto)).andThrow(new AssertionFailedError()).anyTimes();
+		replayAll();
+		
 		Assert.assertFalse(boletoService.processarStatus(boleto, StatusEnum.PAID));
+		verifyAll();
 	}
 	
 	@Test
@@ -36,14 +46,18 @@ public class BoletoServiceTest extends EasyMockSpportUtil{
 		Boleto boleto = Factory.boleto();
 		boleto.setStatus(StatusEnum.CANCELED);
 		
+		EasyMock.expect(boletoDaoMock.merge(boleto)).andThrow(new AssertionFailedError()).anyTimes();
+		replayAll();
+		
 		Assert.assertFalse(boletoService.processarStatus(boleto, StatusEnum.PAID));
+		verifyAll();
 	}
 	
 	@Test
 	public void processarPagamentoBoleto() throws Exception{
 		Boleto boleto = Factory.boleto();
 		boleto.setStatus(StatusEnum.PENDING);
-		
+
 		EasyMock.expect(boletoDaoMock.merge(boleto)).andReturn(boleto);
 		replayAll();
 		

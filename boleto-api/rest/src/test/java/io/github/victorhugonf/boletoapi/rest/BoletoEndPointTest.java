@@ -1,0 +1,206 @@
+package io.github.victorhugonf.boletoapi.rest;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
+import org.easymock.EasyMock;
+import org.easymock.EasyMockRule;
+import org.easymock.EasyMockSupport;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+
+import io.github.victorhugonf.boletoapi.dto.StatusDto;
+import io.github.victorhugonf.boletoapi.ejb.entity.Boleto;
+import io.github.victorhugonf.boletoapi.ejb.entity.StatusEnum;
+import io.github.victorhugonf.boletoapi.ejb.service.BoletoService;
+import io.github.victorhugonf.boletoapi.ejb.utils.Factory;
+import io.github.victorhugonf.boletoapi.rest.utils.RestServer;
+
+public class BoletoEndPointTest extends EasyMockSupport{
+
+	private static final String LOCATION = "Location";
+	private static final String BANKSLIPS = "bankslips";
+	private static final String BANKSLIPS_UUID = "bankslips/" + Factory.uuid().toString();
+
+	private static RestServer server;
+	
+	@TestSubject
+	private static BoletoEndPoint boletoEndPoint = new BoletoEndPoint();
+
+	@Mock
+	private BoletoService boletoServiceMock;
+
+	@Rule
+	public EasyMockRule rule = new EasyMockRule(this);
+	
+	@BeforeClass
+	public static void iniciar(){
+		server = RestServer.create(boletoEndPoint);		
+	}
+	
+	@AfterClass
+	public static void finalizar(){
+		server.stop();
+	}
+	
+	@Test
+	public void acessarGetListagemVazia() throws Exception{		
+		EasyMock.expect(boletoServiceMock.getAll()).andReturn(new ArrayList<>());
+		replayAll();
+		
+		Response response = server.get(BANKSLIPS);
+		
+		Assert.assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+		Assert.assertFalse(response.hasEntity());
+		verifyAll();
+	}
+	
+	@Test
+	public void acessarGetListagemNula() throws Exception{		
+		EasyMock.expect(boletoServiceMock.getAll()).andReturn(null);
+		replayAll();
+		
+		Response response = server.get(BANKSLIPS);
+		
+		Assert.assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus());
+		Assert.assertFalse(response.hasEntity());
+		verifyAll();
+	}
+	
+	@Test
+	public void acessarGetListagem() throws Exception{
+		List<Boleto> boletos = new ArrayList<>();
+		boletos.add(Factory.boleto(StatusEnum.PENDING, BigDecimal.TEN));
+		
+		EasyMock.expect(boletoServiceMock.getAll()).andReturn(boletos);
+		replayAll();
+		
+		Response response = server.get(BANKSLIPS);
+		Object o = response.getEntity();
+		
+		System.out.println(o);
+		
+		Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+		Assert.assertTrue(response.hasEntity());
+		verifyAll();
+	}
+	
+	@Test
+	public void acessarGetNaoEncontrado() throws Exception{		
+		EasyMock.expect(boletoServiceMock.get(Factory.uuid())).andReturn(null);
+		replayAll();
+		
+		Response response = server.get(BANKSLIPS_UUID);
+		
+		Assert.assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+		Assert.assertFalse(response.hasEntity());
+		verifyAll();
+	}
+	
+	@Test
+	public void acessarGetComResultado() throws Exception{
+		Boleto boleto = Factory.boleto(Factory.uuid(), StatusEnum.PENDING, BigDecimal.TEN);
+		
+		EasyMock.expect(boletoServiceMock.get(Factory.uuid())).andReturn(boleto);
+		replayAll();
+		
+		Response response = server.get(BANKSLIPS_UUID);
+
+		Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+		Assert.assertTrue(response.hasEntity());
+		Assert.assertEquals(boleto, response.readEntity(Boleto.class));
+		verifyAll();
+	}
+	
+	@Test
+	public void acessarPostValido() throws Exception{
+		Boleto boleto = Factory.boleto(Factory.uuid(), StatusEnum.PENDING, BigDecimal.TEN);
+		
+		EasyMock.expect(boletoServiceMock.persist(boleto)).andReturn(boleto);
+		replayAll();
+		
+		Response response = server.post(BANKSLIPS, boleto);
+		
+		Assert.assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+		Assert.assertTrue(response.getHeaderString(LOCATION).contains(BANKSLIPS_UUID));
+		Assert.assertFalse(response.hasEntity());
+		verifyAll();
+	}
+	
+	@Test
+	public void acessarPutSemPayload() throws Exception{
+		Response response = server.put(BANKSLIPS_UUID, null);
+		
+		Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+		Assert.assertFalse(response.hasEntity());
+	}
+	
+	@Test
+	public void acessarPutComStatusNulo() throws Exception{
+		StatusDto statusDto = new StatusDto();
+		statusDto.setStatus(null);
+		
+		Response response = server.put(BANKSLIPS_UUID, statusDto);
+		
+		Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+		Assert.assertFalse(response.hasEntity());
+	}
+	
+	@Test
+	public void acessarPutBoletoNaoEncontrado() throws Exception{
+		StatusDto statusDto = new StatusDto();
+		statusDto.setStatus(StatusEnum.PAID);
+		
+		EasyMock.expect(boletoServiceMock.get(Factory.uuid())).andReturn(null);
+		replayAll();
+		
+		Response response = server.put(BANKSLIPS_UUID, statusDto);
+		
+		Assert.assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+		Assert.assertFalse(response.hasEntity());
+		verifyAll();
+	}
+	
+	@Test
+	public void acessarPutBoletoComStatusNaoPermitido() throws Exception{
+		StatusDto statusDto = new StatusDto();
+		statusDto.setStatus(StatusEnum.PAID);
+		Boleto boleto = Factory.boleto(Factory.uuid(), StatusEnum.CANCELED, BigDecimal.TEN);
+		
+		EasyMock.expect(boletoServiceMock.get(Factory.uuid())).andReturn(boleto);
+		EasyMock.expect(boletoServiceMock.processarStatus(boleto, statusDto.getStatus())).andReturn(false);
+		replayAll();
+		
+		Response response = server.put(BANKSLIPS_UUID, statusDto);
+		
+		Assert.assertEquals(Response.Status.METHOD_NOT_ALLOWED.getStatusCode(), response.getStatus());
+		Assert.assertFalse(response.hasEntity());
+		verifyAll();
+	}
+	
+	@Test
+	public void acessarPut() throws Exception{
+		StatusDto statusDto = new StatusDto();
+		statusDto.setStatus(StatusEnum.PAID);
+		Boleto boleto = Factory.boleto(Factory.uuid(), StatusEnum.PENDING, BigDecimal.TEN);
+		
+		EasyMock.expect(boletoServiceMock.get(Factory.uuid())).andReturn(boleto);
+		EasyMock.expect(boletoServiceMock.processarStatus(boleto, statusDto.getStatus())).andReturn(true);
+		replayAll();
+		
+		Response response = server.put(BANKSLIPS_UUID, statusDto);
+		
+		Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+		Assert.assertFalse(response.hasEntity());
+		verifyAll();
+	}
+
+}

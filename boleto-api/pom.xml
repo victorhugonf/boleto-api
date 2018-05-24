@@ -18,7 +18,7 @@
     	<hibernate-validator-version>6.0.9.Final</hibernate-validator-version>
     	<hibernate-jpamodelgen-version>5.2.15.Final</hibernate-jpamodelgen-version>
     	<ejb-version>3.2</ejb-version>
-    	<resteasy-jaxrs-version>3.1.4.Final</resteasy-jaxrs-version>
+    	<resteasy-version>3.5.1.Final</resteasy-version>
     	<!-- <resteasy-validator-version>3.5.1.Final</resteasy-validator-version> -->
     	<commons-lang3-version>3.7</commons-lang3-version>
     	<jackson-version>2.9.5</jackson-version>

@@ -1,4 +1,4 @@
-package io.github.victorhugonf.boletoapi.tools;
+package io.github.victorhugonf.boletoapi.ejb.utils;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -17,9 +17,15 @@ public class Factory {
 	}
 	
 	public static Boleto boleto(StatusEnum status, BigDecimal valor){
-		Boleto boleto = new Boleto();
+		Boleto boleto = boleto();
 		boleto.setStatus(status);
 		boleto.setValor(valor);
+		return boleto;
+	}
+	
+	public static Boleto boleto(UUID uuid, StatusEnum status, BigDecimal valor){
+		Boleto boleto = boleto(status, valor);
+		boleto.setId(uuid);
 		return boleto;
 	}
 	
