@@ -17,7 +17,7 @@ public interface Service <I extends EntityIdentifiable> {
     
     List<I> getAll() throws Exception;
     
-    I get(UUID id) throws Exception;
+    I getById(UUID id) throws Exception;
     
     I get(I object) throws Exception;
     

@@ -50,7 +50,7 @@ public class Boleto implements EntityIdentifiable{
 	@Column(name = TOTAL_IN_CENTS, nullable = false)
 	@NotEmpty(message = "Valor deve ser informado.")
 	@JsonProperty(TOTAL_IN_CENTS)
-	private BigDecimal valor;
+	private BigDecimal valorTotalEmCentavos;
 	
 	@Column(name = CUSTOMER, nullable = false)
 	@NotEmpty(message = "Cliente deve ser informado.")
@@ -83,12 +83,12 @@ public class Boleto implements EntityIdentifiable{
 		this.dataVencimento = dataVencimento;
 	}
 
-	public BigDecimal getValor() {
-		return valor;
+	public BigDecimal getValorTotalEmCentavos() {
+		return valorTotalEmCentavos;
 	}
 
-	public void setValor(BigDecimal valor) {
-		this.valor = valor;
+	public void setValorTotalEmCentavos(BigDecimal valorTotalEmCentavos) {
+		this.valorTotalEmCentavos = valorTotalEmCentavos;
 	}
 
 	public String getNomeCliente() {

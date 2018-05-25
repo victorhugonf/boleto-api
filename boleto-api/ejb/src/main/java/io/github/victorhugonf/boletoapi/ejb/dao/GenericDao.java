@@ -50,12 +50,12 @@ public abstract class GenericDao <E extends EntityIdentifiable> {
 			return null;
 		}
 
-		return get(object.getId());
+		return getById(object.getId());
 	}
 
 	protected abstract Class<E> getClazz();
 
-	public E get(UUID id) throws Exception {
+	public E getById(UUID id) throws Exception {
 		return getEntityManager().find(getClazz(), id);
 	}
 

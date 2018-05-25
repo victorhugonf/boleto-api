@@ -65,7 +65,7 @@
 		</dependency>
 
 		<dependency>
-		    <groupId>org.hibernate.validator</groupId>
+		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-validator</artifactId>
 		    <version>${hibernate-validator-version}</version>
 		</dependency>
@@ -74,6 +74,13 @@
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-jpamodelgen</artifactId>
 		    <version>${hibernate-jpamodelgen-version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <version>1.4.197</version>
+		    <scope>provided</scope>
 		</dependency>
 
 		<dependency>

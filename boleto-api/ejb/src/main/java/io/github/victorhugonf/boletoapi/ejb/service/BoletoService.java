@@ -1,7 +1,10 @@
 package io.github.victorhugonf.boletoapi.ejb.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
@@ -56,10 +59,12 @@ public class BoletoService extends GenericService<Boleto, BoletoDao> {
 	}
 	
 	@Override
-	public Boleto get(UUID id) throws Exception {
-		Boleto boleto = super.get(id);
+	public Boleto getById(UUID id) throws Exception {
+		Boleto boleto = super.getById(id);
 		
-		if(StatusEnum.PENDING.equals(boleto.getStatus())){
+		if(boleto != null
+			&& StatusEnum.PENDING.equals(boleto.getStatus())){
+			
 			boleto.setMulta(calcularMulta(boleto));
 		}
 		
@@ -67,20 +72,20 @@ public class BoletoService extends GenericService<Boleto, BoletoDao> {
 	}
 
 	private BigDecimal calcularMulta(Boleto boleto) {
-		Instant hoje = Instant.now().truncatedTo(ChronoUnit.DAYS);
+		Instant hoje = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC);
 		Instant vencimento = boleto.getDataVencimento().toInstant();
 		
-		if(hoje.isAfter(vencimento)){
+		if(!hoje.isAfter(vencimento)){
 			return BigDecimal.ZERO;
 		}
 
-		BigDecimal multa = BigDecimal.valueOf(1.01);
+		BigDecimal multa = BigDecimal.valueOf(0.01);
 		
-		if(hoje.plus(10, ChronoUnit.DAYS).isAfter(vencimento)){
-			multa = BigDecimal.valueOf(1.005);
+		if(!hoje.isAfter(vencimento.plus(10, ChronoUnit.DAYS))){
+			multa = BigDecimal.valueOf(0.005);
 		}
 		
-		return boleto.getValor().multiply(multa);
+		return boleto.getValorTotalEmCentavos().multiply(multa).setScale(0, RoundingMode.HALF_EVEN);
 	}
     
 }

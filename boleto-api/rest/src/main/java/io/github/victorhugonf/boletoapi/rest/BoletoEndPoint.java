@@ -33,6 +33,10 @@ public class BoletoEndPoint extends GenericEndPoint<Boleto, BoletoService> {
 	
 	@POST
 	public Response post(Boleto boleto, @Context UriInfo uriInfo) throws Exception{
+		if(boleto == null){
+			return responseBadRequest();
+		}
+		
 		Boleto boletoPersistido = service().persist(boleto);
 		return responseCreated(boletoPersistido, uriInfo);
 	}
@@ -48,7 +52,7 @@ public class BoletoEndPoint extends GenericEndPoint<Boleto, BoletoService> {
 	}
 
 	private Response processarStatus(UUID id, StatusDto status) throws Exception {
-		Boleto boleto = service().get(id);
+		Boleto boleto = service().getById(id);
 		
 		if(boleto == null){
 			return responseNotFound();

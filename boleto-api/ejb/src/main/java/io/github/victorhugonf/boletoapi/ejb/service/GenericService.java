@@ -39,7 +39,7 @@ public abstract class GenericService <E extends EntityIdentifiable,
 
     @Override
     public void remove(UUID id) throws Exception {
-    	remove(get(id));
+    	remove(getById(id));
     }
 
     @Override
@@ -57,8 +57,8 @@ public abstract class GenericService <E extends EntityIdentifiable,
     }
 
     @Override
-    public E get(UUID id) throws Exception {
-        return dao().get(id);
+    public E getById(UUID id) throws Exception {
+        return dao().getById(id);
     }
 
     @Override

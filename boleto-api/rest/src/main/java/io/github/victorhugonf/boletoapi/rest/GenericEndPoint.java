@@ -81,7 +81,7 @@ public abstract class GenericEndPoint<E extends EntityIdentifiable, S extends Se
 	@GET
 	@Path("{id}")
 	public Response get(@PathParam("id") UUID id) throws Exception{
-		E object = service().get(id);
+		E object = service().getById(id);
 
 		return object == null
 				? responseNotFound()
