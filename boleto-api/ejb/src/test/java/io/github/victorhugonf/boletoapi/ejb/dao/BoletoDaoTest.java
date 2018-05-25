@@ -1,8 +1,15 @@
 package io.github.victorhugonf.boletoapi.ejb.dao;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.easymock.EasyMock;
 import org.easymock.EasyMockRule;
@@ -14,6 +21,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import io.github.victorhugonf.boletoapi.ejb.entity.Boleto;
+import io.github.victorhugonf.boletoapi.ejb.entity.StatusEnum;
 import io.github.victorhugonf.boletoapi.ejb.utils.Factory;
 import junit.framework.AssertionFailedError;
 
@@ -25,20 +33,20 @@ public class BoletoDaoTest extends EasyMockSupport{
 	@Mock
 	private EntityManager entityManagerMock;
 	
+	@Mock
+	private CriteriaBuilder criteriaBuilderMock;
+	
+	@Mock
+	private CriteriaQuery<Boleto> criteriaQueryMock;
+	
+	@Mock
+	private Root<Boleto> rootMock;
+	
+	@Mock
+	private TypedQuery<Boleto> typedQueryMock;
+	
 	@Rule
 	public EasyMockRule rule = new EasyMockRule(this);
-
-//	protected CriteriaBuilder getCriteriaBuilder(){
-//		return getEntityManager().getCriteriaBuilder();
-//	}
-//
-//	protected CriteriaQuery<E> createQuery(){
-//		return getCriteriaBuilder().createQuery(getClazz());
-//	}
-//
-//	protected Root<E> createRoot(CriteriaQuery<E> criteriaQuery){
-//		return criteriaQuery.from(getClazz());
-//	}
 	
 	@Test
 	public void persist_persistirBoleto() throws Exception{
@@ -139,11 +147,43 @@ public class BoletoDaoTest extends EasyMockSupport{
 		verifyAll();
 	}
 
-	//TODO: falta esse
-//	public List<E> getAll() throws Exception {
-//    	CriteriaQuery<E> cq = createQuery();
-//    	cq.select(createRoot(cq));
-//    	return getEntityManager().createQuery(cq).getResultList();
-//    }
+	@Test
+	public void getAll_retornarRegistros() throws Exception{
+		List<Boleto> boletos = new ArrayList<>();
+		boletos.add(Factory.createBoleto(Factory.createUuid(), StatusEnum.PENDING, BigDecimal.TEN, Factory.createDateNow()));
+		
+		EasyMock.expect(entityManagerMock.getCriteriaBuilder()).andReturn(criteriaBuilderMock);
+		EasyMock.expect(criteriaBuilderMock.createQuery(Boleto.class)).andReturn(criteriaQueryMock);
+		EasyMock.expect(criteriaQueryMock.from(Boleto.class)).andReturn(rootMock);
+		EasyMock.expect(criteriaQueryMock.select(rootMock)).andReturn(criteriaQueryMock);
+		EasyMock.expect(entityManagerMock.createQuery(criteriaQueryMock)).andReturn(typedQueryMock);
+		EasyMock.expect(typedQueryMock.getResultList()).andReturn(boletos);
+		replayAll();
+		
+		List<Boleto> boletosRetornados = boletoDao.getAll();
+		
+		Assert.assertNotNull(boletosRetornados);
+		Assert.assertEquals(boletos.size(), boletosRetornados.size());
+		verifyAll();
+	}
+	
+	@Test
+	public void getAll_retornarListaVazia() throws Exception{
+		List<Boleto> boletos = new ArrayList<>();
+		
+		EasyMock.expect(entityManagerMock.getCriteriaBuilder()).andReturn(criteriaBuilderMock);
+		EasyMock.expect(criteriaBuilderMock.createQuery(Boleto.class)).andReturn(criteriaQueryMock);
+		EasyMock.expect(criteriaQueryMock.from(Boleto.class)).andReturn(rootMock);
+		EasyMock.expect(criteriaQueryMock.select(rootMock)).andReturn(criteriaQueryMock);
+		EasyMock.expect(entityManagerMock.createQuery(criteriaQueryMock)).andReturn(typedQueryMock);
+		EasyMock.expect(typedQueryMock.getResultList()).andReturn(boletos);
+		replayAll();
+		
+		List<Boleto> boletosRetornados = boletoDao.getAll();
+		
+		Assert.assertNotNull(boletosRetornados);
+		Assert.assertEquals(boletos.size(), boletosRetornados.size());
+		verifyAll();
+	}
 
 }
