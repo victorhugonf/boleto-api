@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -61,10 +62,6 @@ public abstract class GenericEndPoint<E extends EntityIdentifiable, S extends Se
 		return responseStatus(Status.BAD_REQUEST);
 	}
 	
-	protected Response responseNotFound() {
-		return responseStatus(Status.NOT_FOUND);
-	}
-	
 	protected Response responseMethodNotAllowed(){
 		return responseStatus(Status.METHOD_NOT_ALLOWED);
 	}
@@ -83,9 +80,11 @@ public abstract class GenericEndPoint<E extends EntityIdentifiable, S extends Se
 	public Response get(@PathParam("id") UUID id) throws Exception{
 		E object = service().getById(id);
 
-		return object == null
-				? responseNotFound()
-				: responseOk(object);
+		if(object == null){
+			throw new NotFoundException();
+		}
+		
+		return responseOk(object);
 	}
 
 }

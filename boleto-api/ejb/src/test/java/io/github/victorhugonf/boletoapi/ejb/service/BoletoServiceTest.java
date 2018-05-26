@@ -33,7 +33,7 @@ public class BoletoServiceTest extends EasyMockSupport{
 	
 	@Test
 	public void processarStatus_statusPago_naoProcessar() throws Exception{
-		Boleto boleto = Factory.createBoleto();
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		boleto.setStatus(StatusEnum.PAID);
 		
 		EasyMock.expect(boletoDaoMock.merge(boleto)).andThrow(new AssertionFailedError()).anyTimes();
@@ -47,7 +47,7 @@ public class BoletoServiceTest extends EasyMockSupport{
 	
 	@Test
 	public void processarStatus_statusCancelado_naoProcessar() throws Exception{
-		Boleto boleto = Factory.createBoleto();
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		boleto.setStatus(StatusEnum.CANCELED);
 		
 		EasyMock.expect(boletoDaoMock.merge(boleto)).andThrow(new AssertionFailedError()).anyTimes();
@@ -61,7 +61,7 @@ public class BoletoServiceTest extends EasyMockSupport{
 	
 	@Test
 	public void processarStatus_statusPendente_processarPagamento() throws Exception{
-		Boleto boleto = Factory.createBoleto();
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		boleto.setStatus(StatusEnum.PENDING);
 
 		EasyMock.expect(boletoDaoMock.merge(boleto)).andReturn(boleto);
@@ -75,7 +75,7 @@ public class BoletoServiceTest extends EasyMockSupport{
 	
 	@Test
 	public void processarStatus_statusPendente_processarCancelamento() throws Exception{
-		Boleto boleto = Factory.createBoleto();
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		boleto.setStatus(StatusEnum.PENDING);
 		
 		EasyMock.expect(boletoDaoMock.merge(boleto)).andReturn(boleto);
@@ -102,7 +102,8 @@ public class BoletoServiceTest extends EasyMockSupport{
 	
 	@Test
 	public void getById_statusPago_retornarSemMulta() throws Exception{
-		Boleto boleto = Factory.createBoleto(Factory.createUuid(), StatusEnum.PAID, BigDecimal.valueOf(1000), Factory.createDateNow());
+		Boleto boleto = Factory.createBoletoPendenteFake();
+		boleto.setStatus(StatusEnum.PAID);
 		UUID uuid = Factory.createUuid();
 		
 		EasyMock.expect(boletoDaoMock.getById(uuid)).andReturn(boleto);
@@ -119,7 +120,8 @@ public class BoletoServiceTest extends EasyMockSupport{
 	
 	@Test
 	public void getById_statusCancelado_retornarSemMulta() throws Exception{
-		Boleto boleto = Factory.createBoleto(Factory.createUuid(), StatusEnum.CANCELED, BigDecimal.valueOf(1000), Factory.createDateNow());
+		Boleto boleto = Factory.createBoletoPendenteFake();
+		boleto.setStatus(StatusEnum.CANCELED);
 		UUID uuid = Factory.createUuid();
 		
 		EasyMock.expect(boletoDaoMock.getById(uuid)).andReturn(boleto);
@@ -136,8 +138,9 @@ public class BoletoServiceTest extends EasyMockSupport{
 	
 	@Test
 	public void getById_statusPendenteEVencimentoAmanha_retornarSemMulta() throws Exception{
-		Boleto boleto = Factory.createBoleto(Factory.createUuid(), StatusEnum.PENDING, BigDecimal.valueOf(1000), 
-							Date.from(Factory.createInstantNow().plus(1, ChronoUnit.DAYS)));
+		Boleto boleto = Factory.createBoletoFake(Factory.createUuid(), StatusEnum.PENDING,  
+							Date.from(Factory.createInstantNow().plus(1, ChronoUnit.DAYS)),
+							"Jose", BigDecimal.valueOf(1000));
 		UUID uuid = Factory.createUuid();
 		
 		EasyMock.expect(boletoDaoMock.getById(uuid)).andReturn(boleto);
@@ -154,8 +157,9 @@ public class BoletoServiceTest extends EasyMockSupport{
 	
 	@Test
 	public void getById_statusPendenteEVencimentoHoje_retornarSemMulta() throws Exception{
-		Boleto boleto = Factory.createBoleto(Factory.createUuid(), StatusEnum.PENDING, BigDecimal.valueOf(1000), 
-							Factory.createDateNow());
+		Boleto boleto = Factory.createBoletoFake(Factory.createUuid(), StatusEnum.PENDING,  
+						Factory.createDateNow(),
+						"Jose", BigDecimal.valueOf(1000));
 		UUID uuid = Factory.createUuid();
 		
 		EasyMock.expect(boletoDaoMock.getById(uuid)).andReturn(boleto);
@@ -172,8 +176,9 @@ public class BoletoServiceTest extends EasyMockSupport{
 	
 	@Test
 	public void getById_statusPendenteEVencimentoOntem_retornarComMulta() throws Exception{
-		Boleto boleto = Factory.createBoleto(Factory.createUuid(), StatusEnum.PENDING, BigDecimal.valueOf(1000), 
-							Date.from(Factory.createInstantNow().minus(1, ChronoUnit.DAYS)));
+		Boleto boleto = Factory.createBoletoFake(Factory.createUuid(), StatusEnum.PENDING, 
+							Date.from(Factory.createInstantNow().minus(1, ChronoUnit.DAYS)),
+							"Jose", BigDecimal.valueOf(1000));
 		UUID uuid = Factory.createUuid();
 		
 		EasyMock.expect(boletoDaoMock.getById(uuid)).andReturn(boleto);
@@ -190,8 +195,9 @@ public class BoletoServiceTest extends EasyMockSupport{
 	
 	@Test
 	public void getById_statusPendenteEVencimentoHa10Dias_retornarComMulta() throws Exception{
-		Boleto boleto = Factory.createBoleto(Factory.createUuid(), StatusEnum.PENDING, BigDecimal.valueOf(1000), 
-							Date.from(Factory.createInstantNow().minus(10, ChronoUnit.DAYS)));
+		Boleto boleto = Factory.createBoletoFake(Factory.createUuid(), StatusEnum.PENDING, 
+							Date.from(Factory.createInstantNow().minus(10, ChronoUnit.DAYS)),
+							"Jose", BigDecimal.valueOf(1000));
 		UUID uuid = Factory.createUuid();
 		
 		EasyMock.expect(boletoDaoMock.getById(uuid)).andReturn(boleto);
@@ -205,11 +211,12 @@ public class BoletoServiceTest extends EasyMockSupport{
 		Assert.assertEquals(boleto.getStatus(), boletoRetornado.getStatus());
 		verifyAll();
 	}
-	
+
 	@Test
 	public void getById_statusPendenteEVencimentoHa11Dias_retornarComMulta() throws Exception{
-		Boleto boleto = Factory.createBoleto(Factory.createUuid(), StatusEnum.PENDING, BigDecimal.valueOf(1000), 
-							Date.from(Factory.createInstantNow().minus(11, ChronoUnit.DAYS)));
+		Boleto boleto = Factory.createBoletoFake(Factory.createUuid(), StatusEnum.PENDING, 
+							Date.from(Factory.createInstantNow().minus(11, ChronoUnit.DAYS)),
+							"Jose", BigDecimal.valueOf(1000));
 		UUID uuid = Factory.createUuid();
 		
 		EasyMock.expect(boletoDaoMock.getById(uuid)).andReturn(boleto);
@@ -225,5 +232,6 @@ public class BoletoServiceTest extends EasyMockSupport{
 	}
 	
 	//TODO: falta tudo que está no GenericService
+	
     
 }

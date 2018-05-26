@@ -32,6 +32,7 @@
   				<webModule>
   					<groupId>io.github.victorhugonf.boletoapi</groupId>
     				<artifactId>rest</artifactId>
+    				<contextRoot>/rest</contextRoot>
   				</webModule>
   			</configuration>
   		</plugin>

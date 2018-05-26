@@ -3,6 +3,7 @@ package io.github.victorhugonf.boletoapi.rest;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -55,9 +56,9 @@ public class BoletoEndPoint extends GenericEndPoint<Boleto, BoletoService> {
 		Boleto boleto = service().getById(id);
 		
 		if(boleto == null){
-			return responseNotFound();
+			throw new NotFoundException();
 		}
-		
+
 		return service().processarStatus(boleto, status.getStatus())
 				? responseOk()
 				: responseMethodNotAllowed();

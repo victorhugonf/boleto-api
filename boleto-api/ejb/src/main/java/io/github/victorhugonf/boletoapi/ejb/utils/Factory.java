@@ -16,16 +16,21 @@ public class Factory {
 		
 	}
 	
-	public static Boleto createBoleto(){
-		return new Boleto();
+	public static Boleto createBoletoPendenteFake(){
+		return createBoletoFake(Factory.createUuid(),
+							StatusEnum.PENDING,
+							Factory.createDateNow(),
+							"Jose",
+							BigDecimal.valueOf(100000));
 	}
 	
-	public static Boleto createBoleto(UUID uuid, StatusEnum status, BigDecimal valor, Date dataVencimento){
-		Boleto boleto = createBoleto();
+	public static Boleto createBoletoFake(UUID uuid, StatusEnum status, Date dataVencimento, String nomeCliente, BigDecimal valor){
+		Boleto boleto = new Boleto();
 		boleto.setId(uuid);
 		boleto.setStatus(status);
-		boleto.setValorTotalEmCentavos(valor);
 		boleto.setDataVencimento(dataVencimento);
+		boleto.setNomeCliente(nomeCliente);
+		boleto.setValorTotalEmCentavos(valor);
 		return boleto;
 	}
 	

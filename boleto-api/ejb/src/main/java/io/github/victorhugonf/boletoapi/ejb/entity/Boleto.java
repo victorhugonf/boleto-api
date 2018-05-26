@@ -2,6 +2,7 @@ package io.github.victorhugonf.boletoapi.ejb.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -11,7 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -42,13 +49,15 @@ public class Boleto implements EntityIdentifiable{
 	private long version;
 
 	@Column(name = DUE_DATE, nullable = false)
-	@NotEmpty(message = "Data de vencimento deve ser informada.")
+	@NotNull(message = "Data de vencimento deve ser informada.")
 	@JsonProperty(DUE_DATE)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date dataVencimento;
 
 	@Column(name = TOTAL_IN_CENTS, nullable = false)
-	@NotEmpty(message = "Valor deve ser informado.")
+	@NotNull(message = "Valor deve ser informado.")
+	@DecimalMin(value = "1", message = "Valor deve ser maior que zero.")
+	@Digits(integer = 10, fraction = 0, message = "Valor em centavos.")
 	@JsonProperty(TOTAL_IN_CENTS)
 	private BigDecimal valorTotalEmCentavos;
 	
@@ -138,6 +147,15 @@ public class Boleto implements EntityIdentifiable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	@Override
+	public void validate() throws Exception{
+		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+		Set<ConstraintViolation<Boleto>> constraintViolations = validator.validate(this);
+		if(!constraintViolations.isEmpty()){
+			throw new Exception(String.format("%s", constraintViolations.size()));
+		}
 	}
 
 }

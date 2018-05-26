@@ -1,9 +1,6 @@
 package io.github.victorhugonf.boletoapi.rest;
 
-import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -45,12 +42,12 @@ public class BoletoEndPointTest extends EasyMockSupport{
 	public EasyMockRule rule = new EasyMockRule(this);
 	
 	@BeforeClass
-	public static void iniciar(){
+	public static void setUpClass(){
 		server = RestServer.create(boletoEndPoint);		
 	}
 	
 	@AfterClass
-	public static void finalizar(){
+	public static void tearDownClass(){
 		server.stop();
 	}
 	
@@ -81,15 +78,12 @@ public class BoletoEndPointTest extends EasyMockSupport{
 	@Test
 	public void getAll_listagemPreenchida_ok() throws Exception{
 		List<Boleto> boletos = new ArrayList<>();
-		boletos.add(Factory.createBoleto(Factory.createUuid(), StatusEnum.PENDING, BigDecimal.TEN, Date.from(Instant.now())));
+		boletos.add(Factory.createBoletoPendenteFake());
 		
 		EasyMock.expect(boletoServiceMock.getAll()).andReturn(boletos);
 		replayAll();
 		
 		Response response = server.get(BANKSLIPS);
-		Object o = response.getEntity();
-		
-		System.out.println(o);
 		
 		Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 		Assert.assertTrue(response.hasEntity());
@@ -110,7 +104,7 @@ public class BoletoEndPointTest extends EasyMockSupport{
 	
 	@Test
 	public void get_registroEncontrado_ok() throws Exception{
-		Boleto boleto = Factory.createBoleto(Factory.createUuid(), StatusEnum.PENDING, BigDecimal.TEN, Date.from(Instant.now()));
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		
 		EasyMock.expect(boletoServiceMock.getById(Factory.createUuid())).andReturn(boleto);
 		replayAll();
@@ -136,7 +130,7 @@ public class BoletoEndPointTest extends EasyMockSupport{
 	
 	@Test
 	public void post_persistido_created() throws Exception{
-		Boleto boleto = Factory.createBoleto(Factory.createUuid(), StatusEnum.PENDING, BigDecimal.TEN, Date.from(Instant.now()));
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		
 		EasyMock.expect(boletoServiceMock.persist(boleto)).andReturn(boleto);
 		replayAll();
@@ -188,7 +182,7 @@ public class BoletoEndPointTest extends EasyMockSupport{
 	public void put_statusNaoPermitido_methodNotAllowed() throws Exception{
 		StatusDto statusDto = new StatusDto();
 		statusDto.setStatus(StatusEnum.PAID);
-		Boleto boleto = Factory.createBoleto(Factory.createUuid(), StatusEnum.CANCELED, BigDecimal.TEN, Date.from(Instant.now()));
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		
 		EasyMock.expect(boletoServiceMock.getById(Factory.createUuid())).andReturn(boleto);
 		EasyMock.expect(boletoServiceMock.processarStatus(boleto, statusDto.getStatus())).andReturn(false);
@@ -205,7 +199,7 @@ public class BoletoEndPointTest extends EasyMockSupport{
 	public void put_statusPermitido_ok() throws Exception{
 		StatusDto statusDto = new StatusDto();
 		statusDto.setStatus(StatusEnum.PAID);
-		Boleto boleto = Factory.createBoleto(Factory.createUuid(), StatusEnum.PENDING, BigDecimal.TEN, Date.from(Instant.now()));
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		
 		EasyMock.expect(boletoServiceMock.getById(Factory.createUuid())).andReturn(boleto);
 		EasyMock.expect(boletoServiceMock.processarStatus(boleto, statusDto.getStatus())).andReturn(true);

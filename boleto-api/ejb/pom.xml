@@ -51,6 +51,27 @@
 			<artifactId>cdi-api</artifactId>
 			<version>${cdi-api-version}</version>
 		</dependency>
+		
+		<dependency>
+		   <groupId>javax.el</groupId>
+		   <artifactId>javax.el-api</artifactId>
+		   <version>${javax-el-version}</version>
+		   <scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.glassfish</groupId>
+		    <artifactId>javax.el</artifactId>
+		    <version>${javax-el-version}</version>
+		    <scope>provided</scope>
+		</dependency>
+
+<!-- 		<dependency>
+		   <groupId>org.glassfish.web</groupId>
+		   <artifactId>javax.el</artifactId>
+		   <version>2.2.4</version>
+		</dependency>
+ -->
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -74,6 +95,7 @@
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-jpamodelgen</artifactId>
 		    <version>${hibernate-jpamodelgen-version}</version>
+		    <scope>provided</scope>
 		</dependency>
 		
 		<dependency>

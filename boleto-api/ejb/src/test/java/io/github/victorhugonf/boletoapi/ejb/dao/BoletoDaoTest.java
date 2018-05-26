@@ -1,6 +1,5 @@
 package io.github.victorhugonf.boletoapi.ejb.dao;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +20,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import io.github.victorhugonf.boletoapi.ejb.entity.Boleto;
-import io.github.victorhugonf.boletoapi.ejb.entity.StatusEnum;
 import io.github.victorhugonf.boletoapi.ejb.utils.Factory;
 import junit.framework.AssertionFailedError;
 
@@ -50,7 +48,7 @@ public class BoletoDaoTest extends EasyMockSupport{
 	
 	@Test
 	public void persist_persistirBoleto() throws Exception{
-		Boleto boleto = Factory.createBoleto();
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		
 		entityManagerMock.persist(boleto);
 		EasyMock.expectLastCall();
@@ -65,7 +63,7 @@ public class BoletoDaoTest extends EasyMockSupport{
 	
 	@Test
 	public void merge_persistirBoleto() throws Exception{
-		Boleto boleto = Factory.createBoleto();
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		
 		EasyMock.expect(entityManagerMock.merge(boleto)).andReturn(boleto);
 		replayAll();
@@ -79,7 +77,7 @@ public class BoletoDaoTest extends EasyMockSupport{
 
 	@Test
 	public void remove_removerBoleto() throws Exception{
-		Boleto boleto = Factory.createBoleto();
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		UUID uuid = Factory.createUuid();
 		boleto.setId(uuid);
 		
@@ -106,7 +104,7 @@ public class BoletoDaoTest extends EasyMockSupport{
 
 	@Test
 	public void getByObject_objetoValido_retornarObjeto() throws Exception{
-		Boleto boleto = Factory.createBoleto();
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		UUID uuid = Factory.createUuid();
 		boleto.setId(uuid);
 		
@@ -133,7 +131,7 @@ public class BoletoDaoTest extends EasyMockSupport{
 	
 	@Test
 	public void getById_uuidValido_retornarObjeto() throws Exception{
-		Boleto boleto = Factory.createBoleto();
+		Boleto boleto = Factory.createBoletoPendenteFake();
 		UUID uuid = Factory.createUuid();
 		boleto.setId(uuid);
 		
@@ -150,7 +148,7 @@ public class BoletoDaoTest extends EasyMockSupport{
 	@Test
 	public void getAll_retornarRegistros() throws Exception{
 		List<Boleto> boletos = new ArrayList<>();
-		boletos.add(Factory.createBoleto(Factory.createUuid(), StatusEnum.PENDING, BigDecimal.TEN, Factory.createDateNow()));
+		boletos.add(Factory.createBoletoPendenteFake());
 		
 		EasyMock.expect(entityManagerMock.getCriteriaBuilder()).andReturn(criteriaBuilderMock);
 		EasyMock.expect(criteriaBuilderMock.createQuery(Boleto.class)).andReturn(criteriaQueryMock);
