@@ -18,7 +18,7 @@ mvn clean package
 
 ### Exemplo de consumo da API:
 
-O arquivo **boleto-api.postman_collection.json** contém os exemplos de consumo da API.
+O arquivo **boleto-api.postman_collection.json** contém o exemplos de consumo da API através do Postman.
 
 ### Execução dos testes de integração:
 
