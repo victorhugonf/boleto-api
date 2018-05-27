@@ -22,4 +22,5 @@ O arquivo **boleto-api.postman_collection.json** contém o exemplos de consumo d
 
 ### Execução dos testes de integração:
 
-Para realizar os testes de integração é necessário executar o projeto.
+Os testes de integração são executados através da classe **BoletoIntegrationTesting**.
+Para executá-los é necessário executar o projeto através do Wildfly.
