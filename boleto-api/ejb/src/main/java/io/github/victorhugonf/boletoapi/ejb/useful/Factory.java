@@ -1,4 +1,4 @@
-package io.github.victorhugonf.boletoapi.ejb.utils;
+package io.github.victorhugonf.boletoapi.ejb.useful;
 
 import java.math.BigDecimal;
 import java.time.Instant;

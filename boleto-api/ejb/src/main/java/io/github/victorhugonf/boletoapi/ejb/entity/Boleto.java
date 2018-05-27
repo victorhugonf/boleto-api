@@ -2,7 +2,6 @@ package io.github.victorhugonf.boletoapi.ejb.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -12,20 +11,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.github.victorhugonf.boletoapi.ejb.utils.CONSTANTES;
+import io.github.victorhugonf.boletoapi.ejb.useful.Constantes;
 
 @Entity
 @Table(name = Boleto.TABELA)
@@ -40,8 +36,8 @@ public class Boleto implements EntityIdentifiable{
 	private static final String FINE = "fine";
 
 	@Id
-	@GeneratedValue(generator = CONSTANTES.UUID)
-	@GenericGenerator(name = CONSTANTES.UUID, strategy = CONSTANTES.ORG_HIBERNATE_ID_UUIDGENERATOR)
+	@GeneratedValue(generator = Constantes.UUID)
+	@GenericGenerator(name = Constantes.UUID, strategy = Constantes.ORG_HIBERNATE_ID_UUIDGENERATOR)
 	@Column(updatable = false, nullable = false)
     private UUID id;
 
@@ -57,17 +53,18 @@ public class Boleto implements EntityIdentifiable{
 	@Column(name = TOTAL_IN_CENTS, nullable = false)
 	@NotNull(message = "Valor deve ser informado.")
 	@DecimalMin(value = "1", message = "Valor deve ser maior que zero.")
-	@Digits(integer = 10, fraction = 0, message = "Valor em centavos.")
+	@Digits(integer = 10, fraction = 0, message = "Valor em centavos, não informar fracionado.")
 	@JsonProperty(TOTAL_IN_CENTS)
 	private BigDecimal valorTotalEmCentavos;
 	
-	@Column(name = CUSTOMER, nullable = false)
-	@NotEmpty(message = "Cliente deve ser informado.")
+	@Column(name = CUSTOMER, nullable = false, length = 100)
+	@NotNull(message = "Cliente deve ser informado.")
+	@Size(min = 1, max = 100, message = "Cliente deve possuir de 1 até 100 caracteres.")
 	@JsonProperty(CUSTOMER)
 	private String nomeCliente;
 	
 	@Column(nullable = false)
-	@NotEmpty(message = "Status deve ser informado.")
+	@NotNull(message = "Status deve ser informado.")
 	private String status;
 	
 	@Transient
@@ -147,15 +144,6 @@ public class Boleto implements EntityIdentifiable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-	
-	@Override
-	public void validate() throws Exception{
-		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-		Set<ConstraintViolation<Boleto>> constraintViolations = validator.validate(this);
-		if(!constraintViolations.isEmpty()){
-			throw new Exception(String.format("%s", constraintViolations.size()));
-		}
 	}
 
 }

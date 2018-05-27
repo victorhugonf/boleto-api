@@ -24,8 +24,6 @@ public abstract class GenericService <E extends EntityIdentifiable,
 		if(object == null){
     		throw new Exception(getClazz().getSimpleName() + " not defined.");
     	}
-		
-		object.validate();
 	}
 
     protected abstract void validatePersist(E object) throws Exception;

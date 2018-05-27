@@ -8,7 +8,5 @@ public interface EntityIdentifiable extends Serializable {
 	UUID getId();
 
 	void setId(UUID id);
-	
-	void validate() throws Exception;
 
 }
