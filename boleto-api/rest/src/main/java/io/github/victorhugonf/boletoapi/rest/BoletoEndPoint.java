@@ -3,6 +3,7 @@ package io.github.victorhugonf.boletoapi.rest;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -33,7 +34,7 @@ public class BoletoEndPoint extends GenericEndPoint<Boleto, BoletoService> {
 	}
 	
 	@POST
-	public Response post(Boleto boleto, @Context UriInfo uriInfo) throws Exception{
+	public Response post(@Valid Boleto boleto, @Context UriInfo uriInfo) throws Exception{
 		if(boleto == null){
 			return responseBadRequest();
 		}
