@@ -20,7 +20,7 @@ import io.github.victorhugonf.boletoapi.dto.StatusDto;
 import io.github.victorhugonf.boletoapi.ejb.entity.Boleto;
 import io.github.victorhugonf.boletoapi.ejb.entity.StatusEnum;
 import io.github.victorhugonf.boletoapi.ejb.service.BoletoService;
-import io.github.victorhugonf.boletoapi.ejb.utils.Factory;
+import io.github.victorhugonf.boletoapi.ejb.useful.Factory;
 import io.github.victorhugonf.boletoapi.rest.utils.RestServer;
 import junit.framework.AssertionFailedError;
 

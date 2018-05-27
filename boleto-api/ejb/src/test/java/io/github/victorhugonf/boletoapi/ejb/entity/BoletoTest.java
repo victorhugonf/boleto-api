@@ -11,7 +11,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import io.github.victorhugonf.boletoapi.ejb.utils.Factory;
+import io.github.victorhugonf.boletoapi.ejb.useful.Factory;
 
 public class BoletoTest{
 	

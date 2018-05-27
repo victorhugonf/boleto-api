@@ -20,7 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import io.github.victorhugonf.boletoapi.ejb.entity.Boleto;
-import io.github.victorhugonf.boletoapi.ejb.utils.Factory;
+import io.github.victorhugonf.boletoapi.ejb.useful.Factory;
 import junit.framework.AssertionFailedError;
 
 public class BoletoDaoTest extends EasyMockSupport{
