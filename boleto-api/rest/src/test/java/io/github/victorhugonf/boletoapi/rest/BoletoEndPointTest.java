@@ -21,7 +21,7 @@ import io.github.victorhugonf.boletoapi.ejb.entity.Boleto;
 import io.github.victorhugonf.boletoapi.ejb.entity.StatusEnum;
 import io.github.victorhugonf.boletoapi.ejb.service.BoletoService;
 import io.github.victorhugonf.boletoapi.ejb.useful.Factory;
-import io.github.victorhugonf.boletoapi.rest.utils.RestServer;
+import io.github.victorhugonf.boletoapi.rest.useful.RestServer;
 import junit.framework.AssertionFailedError;
 
 public class BoletoEndPointTest extends EasyMockSupport{

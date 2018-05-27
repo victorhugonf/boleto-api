@@ -15,27 +15,13 @@ public abstract class GenericService <E extends EntityIdentifiable,
 
 	@Override
     public E persist(E object) throws Exception {
-    	validate(object);
-    	validatePersist(object);
 		return dao().persist(object);
     }
 
-	private void validate(E object) throws Exception {
-		if(object == null){
-    		throw new Exception(getClazz().getSimpleName() + " not defined.");
-    	}
-	}
-
-    protected abstract void validatePersist(E object) throws Exception;
-
     @Override
     public E merge(E object) throws Exception {
-    	validate(object);
-    	validateMerge(object);
     	return dao().merge(object);
     }
-
-    protected abstract void validateMerge(E object) throws Exception;
 
     @Override
     public void remove(UUID id) throws Exception {
@@ -44,12 +30,8 @@ public abstract class GenericService <E extends EntityIdentifiable,
 
     @Override
     public void remove(E object) throws Exception {
-    	validate(object);
-    	validateRemove(object);
     	dao().remove(object);
     }
-
-    protected abstract void validateRemove(E object) throws Exception;
 
     @Override
     public List<E> getAll() throws Exception {

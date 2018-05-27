@@ -1,4 +1,4 @@
-package io.github.victorhugonf.boletoapi.rest.utils;
+package io.github.victorhugonf.boletoapi.rest.useful;
 
 import java.util.concurrent.TimeUnit;
 
@@ -8,41 +8,28 @@ import javax.ws.rs.core.Response;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
-import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
-
-public class RestServer {
-	
-	private static final String HOST = "localhost";
-	private static final Integer PORT = 5555;
+public class RestClient {
 	
 	private ResteasyClient client;
-	private TJWSEmbeddedJaxrsServer server;
+	private String host;
+	private Integer port;
 	
-	private RestServer(Object resource){
-		server = new TJWSEmbeddedJaxrsServer();
-		server.setBindAddress(HOST);
-		server.setPort(PORT);
-		server.getDeployment().getResources().add(resource);
-		server.start();
-		
+	private RestClient(String host, Integer port){
 		client = new ResteasyClientBuilder()
 						.connectionPoolSize(99)
 						.connectionCheckoutTimeout(100, TimeUnit.MILLISECONDS)
 						.build();
+		this.host = host;
+		this.port = port;
 	}
 	
-	public static RestServer create(Object resource){
-		return new RestServer(resource);
+	public static RestClient create(String host, Integer port){
+		return new RestClient(host, port);
 	}
 
-	public void stop() {
-		server.stop();		
-	}
-	
 	private String url(String path){
-		return String.format("http://%s:%s/%s", HOST, PORT, path);
+		return String.format("http://%s:%s/%s", host, port, path);
 	}
 
 	private Builder request(String path) {

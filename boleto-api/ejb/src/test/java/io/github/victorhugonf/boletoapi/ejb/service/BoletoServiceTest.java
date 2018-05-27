@@ -3,6 +3,8 @@ package io.github.victorhugonf.boletoapi.ejb.service;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.easymock.EasyMock;
@@ -17,7 +19,7 @@ import org.junit.Test;
 import io.github.victorhugonf.boletoapi.ejb.dao.BoletoDao;
 import io.github.victorhugonf.boletoapi.ejb.entity.Boleto;
 import io.github.victorhugonf.boletoapi.ejb.entity.StatusEnum;
-import io.github.victorhugonf.boletoapi.ejb.utils.Factory;
+import io.github.victorhugonf.boletoapi.ejb.useful.Factory;
 import junit.framework.AssertionFailedError;
 
 public class BoletoServiceTest extends EasyMockSupport{
@@ -231,7 +233,90 @@ public class BoletoServiceTest extends EasyMockSupport{
 		verifyAll();
 	}
 	
-	//TODO: falta tudo que está no GenericService
+	@Test
+	public void persist_persistido_retornarObjeto() throws Exception{
+		Boleto boleto = Factory.createBoletoPendenteFake();
+
+		EasyMock.expect(boletoDaoMock.persist(boleto)).andReturn(boleto);
+		replayAll();
+		
+		Boleto boletoRetornado = boletoService.persist(boleto);
+		
+		Assert.assertNotNull(boletoRetornado);
+		Assert.assertEquals(boleto, boletoRetornado);
+		verifyAll();
+	}
 	
+	@Test
+	public void merge_persistido_retornarObjeto() throws Exception{
+		Boleto boleto = Factory.createBoletoPendenteFake();
+
+		EasyMock.expect(boletoDaoMock.merge(boleto)).andReturn(boleto);
+		replayAll();
+		
+		Boleto boletoRetornado = boletoService.merge(boleto);
+		
+		Assert.assertNotNull(boletoRetornado);
+		Assert.assertEquals(boleto, boletoRetornado);
+		verifyAll();
+	}
+	
+	@Test
+	public void remove_removido() throws Exception{
+		Boleto boleto = Factory.createBoletoPendenteFake();
+
+		boletoDaoMock.remove(boleto);
+		EasyMock.expectLastCall();
+		replayAll();
+		
+		boletoService.remove(boleto);
+		
+		verifyAll();
+	}
+	
+	@Test
+	public void removeById_removido() throws Exception{
+		Boleto boleto = Factory.createBoletoPendenteFake();
+
+		EasyMock.expect(boletoDaoMock.getById(boleto.getId())).andReturn(boleto);
+		boletoDaoMock.remove(boleto);
+		EasyMock.expectLastCall();
+		replayAll();
+		
+		boletoService.remove(boleto.getId());
+		
+		verifyAll();
+	}
+	
+	@Test
+	public void getAll_retornarLista() throws Exception{
+		List<Boleto> boletos = new ArrayList<>();
+		boletos.add(Factory.createBoletoPendenteFake());
+
+		EasyMock.expect(boletoDaoMock.getAll()).andReturn(boletos);
+		replayAll();
+		
+		List<Boleto> boletosRetornados = boletoService.getAll();
+		
+		Assert.assertNotNull(boletosRetornados);
+		Assert.assertEquals(boletos.size(), boletosRetornados.size());
+		
+		verifyAll();
+	}
+	
+	@Test
+	public void get_retornarObjeto() throws Exception{
+		Boleto boleto = Factory.createBoletoPendenteFake();
+
+		EasyMock.expect(boletoDaoMock.get(boleto)).andReturn(boleto);
+		replayAll();
+		
+		Boleto boletoRetornado = boletoService.get(boleto);
+		
+		Assert.assertNotNull(boletoRetornado);
+		Assert.assertEquals(boleto, boletoRetornado);
+		
+		verifyAll();
+	}
     
 }

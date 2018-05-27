@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import io.github.victorhugonf.boletoapi.rest.utils.RestServer;
+import io.github.victorhugonf.boletoapi.rest.useful.RestServer;
 
 public class PingEndPointTest {
 	

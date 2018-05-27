@@ -27,21 +27,6 @@ public class BoletoService extends GenericService<Boleto, BoletoDao> {
 	protected BoletoDao dao() {
 		return boletoDao;
 	}
-	
-	@Override
-    protected void validatePersist(Boleto object) throws Exception{
-		
-    }
-    
-    @Override
-    protected void validateMerge(Boleto object) throws Exception{
-    	
-    }
-    
-    @Override
-	protected void validateRemove(Boleto object) throws Exception {
-				
-	}
 
 	@Override
 	protected Class<Boleto> getClazz() {
