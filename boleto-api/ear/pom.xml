@@ -22,8 +22,6 @@
   				<target>${java-version}</target>
 
   				<finalName>boleto-api</finalName>
-  			<!-- <defaultLibBundleDir>/lib</defaultLibBundleDir> -->
-			<!-- <skinnyWars>true</skinnyWars> -->
 
   				<ejbModule>
   					<groupId>io.github.victorhugonf.boletoapi</groupId>

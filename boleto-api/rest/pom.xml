@@ -52,12 +52,6 @@
     	<version>${resteasy-version}</version>
     	<scope>test</scope>
 	</dependency>
-
-	<!-- <dependency>
-	    <groupId>org.jboss.resteasy</groupId>
-	    <artifactId>resteasy-validator-provider-11</artifactId>
-	    <version>${resteasy-validator-version}</version>
-	</dependency> -->
 	
 	<dependency>
 	    <groupId>junit</groupId>

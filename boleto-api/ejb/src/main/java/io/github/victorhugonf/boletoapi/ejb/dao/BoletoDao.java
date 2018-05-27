@@ -14,19 +14,4 @@ public class BoletoDao extends GenericDao<Boleto> {
 		return Boleto.class;
 	}
 
-//	public List<Boleto> getByModel(String model) throws Exception {
-//		CriteriaQuery<Boleto> cq = createQuery();
-//    	Root<Boleto> root = createRoot(cq);
-//
-//    	cq.where(getCriteriaBuilder()
-//    			.like(root.<String>get(Aircraft_.model), "%" + model + "%"));
-//
-////    	try{
-//    	return getEntityManager().createQuery(cq).getResultList();
-//
-////    	}catch(NoResultException e){
-////    		return null;
-////    	}
-//    }
-
 }
